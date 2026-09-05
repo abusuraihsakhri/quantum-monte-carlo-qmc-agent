@@ -7,6 +7,9 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+import math
+import os
+import tempfile
 import pytest
 from agents.base import PHIGuard, AuditLogger, SecurityException
 from agents.models import SystemTaskPayload, UrgencyLevel, SystemIntegrityStatus
@@ -63,3 +66,60 @@ def test_supervisor_consensus_and_audit():
     assert main(["audit", "--task-id", "CLI-TEST-01"]) == 0
     assert main(["chat", "Explain", "specifications"]) == 0
     assert main(["verify-audit"]) == 0
+
+
+def test_input_validation_nan_infinity():
+    """Test that NaN and infinity values are rejected."""
+    with pytest.raises(ValueError, match="finite"):
+        SystemTaskPayload(task_id="T1", target_identifier="KEY-01", primary_metric=float("nan"))
+
+    with pytest.raises(ValueError, match="finite"):
+        SystemTaskPayload(task_id="T1", target_identifier="KEY-01", primary_metric=float("inf"))
+
+    with pytest.raises(ValueError, match="finite"):
+        SystemTaskPayload(task_id="T1", target_identifier="KEY-01", primary_metric=10.0, secondary_metric=float("-inf"))
+
+
+def test_input_validation_empty_identifiers():
+    """Test that empty identifiers are rejected."""
+    with pytest.raises(ValueError, match="empty"):
+        SystemTaskPayload(task_id="", target_identifier="KEY-01", primary_metric=10.0)
+
+    with pytest.raises(ValueError, match="empty"):
+        SystemTaskPayload(task_id="T1", target_identifier="", primary_metric=10.0)
+
+    with pytest.raises(ValueError, match="empty"):
+        SystemTaskPayload(task_id="   ", target_identifier="KEY-01", primary_metric=10.0)
+
+
+def test_batch_processing_file_not_found():
+    """Test that batch processing handles missing files gracefully."""
+    result = main(["batch", "-i", "nonexistent_file.csv"])
+    assert result == 1
+
+
+def test_batch_processing_with_malformed_csv():
+    """Test that batch processing handles malformed CSV gracefully."""
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as f:
+        f.write("task_id,target_identifier,primary_metric\n")
+        f.write("T1,KEY-01,invalid_number\n")  # Invalid float
+        f.write("T2,KEY-02,15.0\n")  # Valid row
+        temp_path = f.name
+
+    try:
+        result = main(["batch", "-i", temp_path, "-o", "test_output.csv"])
+        assert result == 0
+        # Clean up output file
+        if os.path.exists("test_output.csv"):
+            os.remove("test_output.csv")
+    finally:
+        os.remove(temp_path)
+
+
+def test_phi_redaction():
+    """Test that PHI is properly redacted."""
+    text_with_phi = "Patient MRN-123456 has phone 555-123-4567"
+    redacted = PHIGuard.redact_phi(text_with_phi)
+    assert "MRN-123456" not in redacted
+    assert "555-123-4567" not in redacted
+    assert "[REDACTED_IDENTIFIER]" in redacted

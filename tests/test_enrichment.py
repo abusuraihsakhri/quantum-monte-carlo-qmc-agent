@@ -12,9 +12,6 @@ from enrichment import (
     FilesToCreatemodifyEngine,
     TestingEngine,
     QuantumMonteCarloForPortfolioRiskAnalysisEngine,
-    ImplementationEngine,
-    FilesToCreatemodifyEngine,
-    TestingEngine,
     QuantummontecarloqmcagentEnrichmentSuite,
     enrichment_suite,
 )
@@ -22,7 +19,15 @@ from enrichment import (
 def test_enrichment_suite_execution():
     suite = QuantummontecarloqmcagentEnrichmentSuite()
     res = suite.execute_all(primary_val=0.5, secondary_val=0.2)
-    assert len(res) >= 1
+    assert len(res) == 5  # Verify all 5 unique engines are present
+    expected_keys = {
+        "QuantumAmplitudeEstimationForFinancialOptionPricingEngine",
+        "ImplementationEngine",
+        "FilesToCreatemodifyEngine",
+        "TestingEngine",
+        "QuantumMonteCarloForPortfolioRiskAnalysisEngine",
+    }
+    assert set(res.keys()) == expected_keys
     for k, v in res.items():
         assert v.status in ["OPTIMAL", "WARNING", "CRITICAL_ALERT"]
         assert isinstance(v.recommendations, list)
@@ -33,3 +38,11 @@ def test_enrichment_threshold_escalation():
     for k, v in res.items():
         assert v.status in ["WARNING", "CRITICAL_ALERT"]
         assert len(v.alerts) > 0
+
+def test_enrichment_suite_no_duplicate_results():
+    """Verify that the enrichment suite produces exactly 5 unique results (no duplicates)."""
+    suite = QuantummontecarloqmcagentEnrichmentSuite()
+    res = suite.execute_all(primary_val=1.5, secondary_val=0.5)
+    assert len(res) == 5
+    # Verify all keys are unique (no duplicates from repeated assignments)
+    assert len(set(res.keys())) == len(res)
