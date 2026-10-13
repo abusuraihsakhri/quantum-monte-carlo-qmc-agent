@@ -12,7 +12,7 @@ supervisor = SystemSupervisor(model_provider="mock")
 
 app = FastAPI(
     title="Quantum Monte Carlo Qmc Agent API",
-    description="Enterprise Distributed Component Platform (Post-Quantum Cryptography & Hardware Security)",
+    description="Heuristic task-threshold audit service. Does not perform physical quantum Monte Carlo or cryptographic conformance tests.",
     version="3.0.0-ENTERPRISE",
 )
 
