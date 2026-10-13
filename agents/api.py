@@ -47,7 +47,7 @@ def api_chat(req: ChatRequest):
         ans = supervisor.query_supervisory_chat(req.query)
         return {"response": ans}
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Query rejected by input policy") from e
 
 
 @app.get("/api/audit/logs")
