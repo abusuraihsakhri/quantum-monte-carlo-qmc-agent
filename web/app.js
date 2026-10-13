@@ -57,6 +57,7 @@ form.addEventListener("submit", (event) => {
       byId("x2").textContent = fmt(output.meanXSquared);
       byId("deviation").textContent = fmt(output.energy - output.analyticEnergy);
       byId("results").hidden = false;
+      byId("empty-hint").hidden = true;
       byId("download").disabled = false;
       byId("download").onclick = () => {
         const result = { ...output };
@@ -72,6 +73,7 @@ form.addEventListener("submit", (event) => {
       status.textContent = "Completed locally · reproducible seed " + output.seed;
     } catch (error) {
       byId("results").hidden = true;
+      byId("empty-hint").hidden = false;
       byId("download").disabled = true;
       status.textContent = "Input error: " + error.message;
     } finally {
