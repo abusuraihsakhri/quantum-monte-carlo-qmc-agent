@@ -15,7 +15,7 @@ def create_app():
 
         app = FastAPI(
             title="Variational & Diffusion Quantum Monte Carlo (QMC) Agent",
-            description="Executes imaginary-time projector Diffusion Monte Carlo (DMC) with fixed-node approximation for correlated electron systems.",
+            description="Legacy rule-based parameter auditing. For physical 1D variational Monte Carlo use qmc_simulator.vmc.",
             version="2.0.0-FRONTIER",
         )
 
