@@ -1,5 +1,5 @@
 """
-FastAPI REST API Server for Variational & Diffusion Quantum Monte Carlo (QMC) Agent.
+Legacy FastAPI threshold-audit service; physical VMC is in qmc_simulator.vmc.
 """
 from typing import Dict, Any
 from .models import FrontierPayload
