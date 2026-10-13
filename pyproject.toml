@@ -3,25 +3,35 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "quantum-monte-carlo-qmc-engine"
+name = "quantum-monte-carlo-qmc-agent"
 version = "2.0.0"
-description = "Variational & Diffusion Quantum Monte Carlo (QMC) Engine"
+description = "Quantum Monte Carlo teaching sampler and rule-based task audit service"
 readme = "README.md"
-authors = [{ name = "Dr. Abu Suraih Sakhri", email = "abusuraih@example.com" }]
+authors = [{ name = "Dr. Abu Suraih Sakhri" }]
 license = { text = "MIT" }
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Topic :: Security/Cryptography",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-requires-python = ">=3.9"
-dependencies = []
+requires-python = ">=3.10"
+dependencies = ["pydantic>=2,<3"]
+
+[project.optional-dependencies]
+server = ["fastapi>=0.100,<1", "uvicorn>=0.23,<1"]
+test = ["pytest>=7,<10", "httpx>=0.24,<1"]
 
 [project.scripts]
 quantum-monte-carlo-qmc-engine = "qmc_simulator.cli:main"
+quantum-monte-carlo-audit = "cli:main"
 
 [project.urls]
-Homepage = "https://github.com/abusuraihsakhri/quantum-monte-carlo-qmc-engine"
-Repository = "https://github.com/abusuraihsakhri/quantum-monte-carlo-qmc-engine.git"
+Homepage = "https://github.com/abusuraihsakhri/quantum-monte-carlo-qmc-agent"
+Repository = "https://github.com/abusuraihsakhri/quantum-monte-carlo-qmc-agent.git"
+
+[tool.setuptools]
+py-modules = ["cli", "enrichment", "simulator", "qmc_simulator_app"]
+
+[tool.setuptools.packages.find]
+include = ["agents*", "qmc_simulator*"]

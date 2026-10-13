@@ -12,7 +12,7 @@ coordinator = QMCCoordinator()
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(prog="quantum-monte-carlo-qmc-agent", description="Variational & Diffusion Quantum Monte Carlo (QMC) Agent")
+    parser = argparse.ArgumentParser(prog="quantum-monte-carlo-qmc-agent", description="Variational Monte Carlo demonstration and legacy threshold audits")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # Audit
@@ -38,7 +38,29 @@ def main(argv=None):
     p_serve.add_argument("--host", default="127.0.0.1")
     p_serve.add_argument("--port", type=int, default=8000)
 
+    # Physical VMC example (distinct from the legacy rule-based audit)
+    p_vmc = subparsers.add_parser("vmc", help="Run seeded 1D harmonic-oscillator VMC")
+    p_vmc.add_argument("--alpha", type=float, default=0.85)
+    p_vmc.add_argument("--samples", type=int, default=10000)
+    p_vmc.add_argument("--burn-in", type=int, default=1000)
+    p_vmc.add_argument("--proposal", type=float, default=1.5)
+    p_vmc.add_argument("--seed", type=int, default=42)
+
     args = parser.parse_args(argv)
+    if args.command == "vmc":
+        from dataclasses import asdict
+        from .vmc import run_vmc
+        try:
+            result = run_vmc(
+                alpha=args.alpha, samples=args.samples, burn_in=args.burn_in,
+                proposal=args.proposal, seed=args.seed,
+            )
+        except ValueError as error:
+            print(f"Error: {error}", file=sys.stderr)
+            return 2
+        print(json.dumps(asdict(result), indent=2))
+        return 0
+
 
     if args.command == "audit":
         payload = FrontierPayload(
