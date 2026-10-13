@@ -7,7 +7,7 @@ name = "quantum-monte-carlo-qmc-agent"
 version = "2.0.0"
 description = "Quantum Monte Carlo teaching sampler and rule-based task audit service"
 readme = "README.md"
-authors = [{ name = "Dr. Abu Suraih Sakhri", email = "abusuraih@example.com" }]
+authors = [{ name = "Dr. Abu Suraih Sakhri" }]
 license = { text = "MIT" }
 classifiers = [
     "Programming Language :: Python :: 3",
