@@ -12,7 +12,7 @@ coordinator = QMCCoordinator()
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(prog="quantum-monte-carlo-qmc-agent", description="Variational & Diffusion Quantum Monte Carlo (QMC) Agent")
+    parser = argparse.ArgumentParser(prog="quantum-monte-carlo-qmc-agent", description="Variational Monte Carlo demonstration and legacy threshold audits")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # Audit
