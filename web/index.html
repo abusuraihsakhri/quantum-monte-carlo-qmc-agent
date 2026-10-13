@@ -1,236 +1,132 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Monte Carlo Qmc Engine — Operations Console</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #090d16;
-            --card: #111827;
-            --border: #1f293d;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.25);
-            --text: #f3f4f6;
-            --text-muted: #9ca3af;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --success: #10b981;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            padding: 2rem;
-            min-height: 100vh;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        .header-title h1 { font-size: 1.6rem; font-weight: 700; color: #fff; }
-        .header-title p { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem; }
-        .badge {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: var(--accent-glow);
-            color: var(--accent);
-            border: 1px solid var(--accent);
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr;
-            gap: 1.5rem;
-        }
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        .card h2 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; }
-        input, select, textarea {
-            width: 100%;
-            padding: 0.65rem 0.9rem;
-            background: #0d1322;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: #fff;
-            font-family: inherit;
-            font-size: 0.9rem;
-        }
-        input:focus, textarea:focus { outline: none; border-color: var(--accent); }
-        .btn {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 0.7rem 1.4rem;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            width: 100%;
-        }
-        .btn:hover { background: #2563eb; }
-        .terminal {
-            background: #060911;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: #10b981;
-            height: 380px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-        }
-        .metrics-bar {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        .metric-box {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-        }
-        .metric-val { font-size: 1.4rem; font-weight: 700; color: #fff; margin-top: 0.25rem; }
-        .metric-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Reproducible 1D variational Monte Carlo experiment for the harmonic oscillator, running entirely in your browser.">
+  <title>Quantum Monte Carlo | Variational Sampler</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, sans-serif; color-scheme: dark;
+      --bg:#0b101b;--card:#151e2e;--line:#34415a;--text:#eef3fc;--muted:#aebbd0;--accent:#4bd4b2;--highlight:#f4b76b }
+    * { box-sizing:border-box }
+    body { background:var(--bg); color:var(--text); margin:0; line-height:1.5 }
+    .wrap { max-width:1120px; margin:auto; padding:28px 22px 70px }
+    .top { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:18px; margin-bottom:24px }
+    h1 { font-size:clamp(1.6rem,3vw,2.5rem); letter-spacing:-.035em; line-height:1.15; margin:5px 0 10px }
+    .eyebrow { font-size:.75rem; font-weight:750; letter-spacing:.12em; color:var(--accent); text-transform:uppercase }
+    .lead { color:var(--muted); max-width:750px; margin:0 }
+    a { color:var(--accent); text-underline-offset:3px }
+    .small { color:var(--muted); font-size:.88rem }
+    .chip { font-size:.82rem; border:1px solid var(--line); background:#1d3041; color:var(--accent); padding:8px 12px; border-radius:999px; white-space:nowrap }
+    .layout { display:grid; grid-template-columns:minmax(260px,370px) minmax(0,1fr); gap:20px; align-items:start }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:15px; padding:23px; min-width:0 }
+    h2 { font-size:1.14rem; margin:0 0 10px; letter-spacing:-.01em }
+    .hint { color:var(--muted); font-size:.87rem; margin:0 0 21px }
+    .fields { display:grid; grid-template-columns:1fr 1fr; gap:15px }
+    .field { min-width:0 }
+    label { display:block; color:#d5deec; font-size:.82rem; font-weight:650; margin:0 0 6px }
+    input { width:100%; color:var(--text); background:#0c1423; border:1px solid #57647c;
+      padding:10px 12px; font:inherit; border-radius:8px }
+    input:focus-visible, button:focus-visible, summary:focus-visible, a:focus-visible {
+      outline:3px solid var(--accent); outline-offset:3px
+    }
+    input[type="checkbox"] { width:auto }
+    button { background:var(--accent); border:0; border-radius:8px; color:#061b1c; padding:11px 17px;
+      font-size:.95rem; font-weight:750; cursor:pointer; min-height:43px }
+    button:hover:not(:disabled) { filter:brightness(1.1) }
+    button:disabled { opacity:.52; cursor:not-allowed }
+    .secondary { background:transparent; color:var(--text); border:1px solid #687993 }
+    .actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:22px }
+    .metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:17px 0 18px }
+    .metric { background:#0d1727; border:1px solid #2e3b53; border-radius:10px; padding:12px; min-width:0 }
+    .metric span { font-size:.75rem; color:var(--muted); display:block; margin-bottom:5px }
+    .metric strong { font-size:clamp(1rem,2vw,1.33rem); font-variant-numeric:tabular-nums; overflow-wrap:anywhere }
+    .metric .accent { color:var(--accent) }
+    .chart { width:100%; height:auto; background:#0e1726; border:1px solid var(--line); border-radius:10px; margin:6px 0 10px }
+    .legend { display:flex; flex-wrap:wrap; gap:15px; color:var(--muted); font-size:.8rem }
+    .legend i { display:inline-block; height:3px; width:19px; vertical-align:middle; margin-right:5px }
+    .explain { margin-top:21px; padding:17px 20px; background:#101a2b; border:1px solid var(--line); border-radius:12px }
+    .explain p { margin:7px 0; color:var(--muted); font-size:.88rem }
+    code { background:#27354b; border-radius:3px; padding:1px 4px; color:#e8f1ff }
+    .status { min-height:23px; margin:13px 0 0; color:var(--accent); font-size:.84rem }
+    details { margin-top:22px }
+    summary { cursor:pointer; font-weight:700; font-size:1.05rem; padding:10px 0 }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#091222; border-radius:9px; padding:15px; color:#d4f0e8; font-size:.8rem }
+    footer { color:var(--muted); margin-top:25px; font-size:.83rem }
+    @media(max-width:800px) { .layout { grid-template-columns:1fr } .wrap { padding:22px 14px 50px } }
+    @media(max-width:500px) { .fields { grid-template-columns:1fr 1fr } .metrics {grid-template-columns:1fr 1fr} .card {padding:17px} }
+    @media(prefers-reduced-motion:reduce) { * { scroll-behavior:auto !important; transition:none !important } }
+  </style>
 </head>
 <body>
-
-    <div class="header">
-        <div class="header-title">
-            <h1>Quantum Monte Carlo Qmc Engine</h1>
-            <p>Domain: Clinical & Cryptographic AI | Standard: CAP / CLSI / NIST Standards | LabMind-Atlas Architecture</p>
-        </div>
-        <div>
-            <span class="badge">Air-Gapped Active</span>
-            <span class="badge" style="background: rgba(16,185,129,0.2); color: #10b981; border-color: #10b981;">Zero-PHI Guard Active</span>
-        </div>
+<main class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Computational physics · Browser experiment</div>
+      <h1>Variational Quantum Monte Carlo</h1>
+      <p class="lead">Estimate the ground-state energy of the one-dimensional quantum harmonic oscillator using Metropolis sampling of a Gaussian trial wavefunction.</p>
     </div>
-
-    <div class="metrics-bar">
-        <div class="metric-box">
-            <div class="metric-label">System Status</div>
-            <div class="metric-val" style="color: var(--success);" id="m-status">OPTIMAL</div>
+    <span class="chip">Runs locally · No account or server</span>
+  </header>
+  <div class="layout">
+    <section class="card" aria-labelledby="input-title">
+      <h2 id="input-title">Simulation parameters</h2>
+      <p class="hint">All calculations happen on this device. Changing the random seed changes the Monte Carlo trajectory.</p>
+      <form id="vmc-form">
+        <div class="fields">
+          <div class="field"><label for="alpha">Trial parameter α</label><input id="alpha" type="number" step="0.05" min="0.01" max="10" value="0.85" required></div>
+          <div class="field"><label for="proposal">Proposal half-width</label><input id="proposal" type="number" step="0.1" min="0.01" max="10" value="1.5" required></div>
+          <div class="field"><label for="samples">Recorded samples</label><input id="samples" type="number" step="1" min="100" max="1000000" value="10000" required></div>
+          <div class="field"><label for="burn-in">Burn-in steps</label><input id="burn-in" type="number" step="1" min="0" max="1000000" value="1000" required></div>
+          <div class="field"><label for="seed">Random seed</label><input id="seed" type="number" step="1" min="0" max="4294967295" value="42" required></div>
         </div>
-        <div class="metric-box">
-            <div class="metric-label">Tasks Processed</div>
-            <div class="metric-val" id="m-tasks">142</div>
+        <div class="actions"><button type="submit" id="vmc-run">Run simulation</button></div>
+      </form>
+      <p role="status" aria-live="polite" class="status" id="vmc-status">Ready to run.</p>
+      <div class="explain">
+        <strong>Physical model</strong>
+        <p><code>H = −½ d²/dx² + ½ x²</code></p>
+        <p><code>ψα(x) = exp(−αx²/2)</code></p>
+        <p><code>E_local = α/2 + (1−α²)x²/2</code></p>
+        <p>The analytic variational expectation is <code>(α + 1/α)/4</code>. The exact ground energy is <code>0.5</code> (ℏ = m = ω = 1).</p>
+      </div>
+    </section>
+    <section class="card" aria-labelledby="results-title">
+      <h2 id="results-title">Energy estimate</h2>
+      <p class="hint">Block means approximate Monte Carlo uncertainty; estimates can be unreliable for strongly autocorrelated chains.</p>
+      <div id="results" hidden>
+        <div class="metrics">
+          <div class="metric"><span>Estimated energy</span><strong class="accent" id="energy">—</strong></div>
+          <div class="metric"><span>Batch-mean SEM</span><strong id="uncertainty">—</strong></div>
+          <div class="metric"><span>Analytic E(α)</span><strong id="analytical">—</strong></div>
+          <div class="metric"><span>Acceptance rate</span><strong id="acceptance">—</strong></div>
+          <div class="metric"><span>Mean x²</span><strong id="x2">—</strong></div>
+          <div class="metric"><span>Estimate − analytic</span><strong id="deviation">—</strong></div>
         </div>
-        <div class="metric-box">
-            <div class="metric-label">Audit Blocks Signed</div>
-            <div class="metric-val" id="m-audit">142</div>
-        </div>
-        <div class="metric-box">
-            <div class="metric-label">PHI Interceptions</div>
-            <div class="metric-val" style="color: var(--accent);" id="m-phi">0</div>
-        </div>
-    </div>
-
-    <div class="grid">
-        <div class="card">
-            <h2>⚙️ Dispatch Distributed Component Audit</h2>
-            <div class="form-group">
-                <label>Task / Sample ID</label>
-                <input type="text" id="task_id" value="TASK-2026-LIVE-01">
-            </div>
-            <div class="form-group">
-                <label>Target Identifier</label>
-                <input type="text" id="target_id" value="SPECIMEN-ALPHA-77">
-            </div>
-            <div class="form-group">
-                <label>Primary Measurement / Value</label>
-                <input type="number" id="primary_metric" value="29.4" step="0.1">
-            </div>
-            <div class="form-group">
-                <label>Secondary Metric / Kinetic Index</label>
-                <input type="number" id="secondary_metric" value="14.8" step="0.1">
-            </div>
-            <div class="form-group">
-                <label>Status / Phenotype Descriptor</label>
-                <input type="text" id="status_descriptor" value="DISCORDANT_ANOMALY">
-            </div>
-            <div class="form-group">
-                <label><input type="checkbox" id="is_critical" checked> Trigger Emergency / Critical Flag</label>
-            </div>
-            <button class="btn" onclick="runAudit()">Execute Distributed Component Audit</button>
-        </div>
-
-        <div class="card">
-            <h2>📊 Real-Time Consensus Dossier & Audit Log</h2>
-            <div class="terminal" id="outputConsole">// Quantum Monte Carlo Qmc Engine Operations Console Ready
-// Connection established with Air-Gapped Supervisor
-// Cryptographic HMAC-SHA256 audit ledger loaded.
-// Ready for live task payload dispatch...</div>
-        </div>
-    </div>
-
-    <script>
-        async function runAudit() {
-            const consoleEl = document.getElementById('outputConsole');
-            consoleEl.innerText = "// Dispatching task across specialized workers...
-// Invoking InvariantQCWorker, SafetyEscalationWorker, ProtocolWorker...";
-
-            const payload = {
-                task_id: document.getElementById('task_id').value,
-                target_identifier: document.getElementById('target_id').value,
-                primary_metric: parseFloat(document.getElementById('primary_metric').value),
-                secondary_metric: parseFloat(document.getElementById('secondary_metric').value),
-                status_descriptor: document.getElementById('status_descriptor').value,
-                is_critical_flag: document.getElementById('is_critical').checked
-            };
-
-            try {
-                const res = await fetch('/api/audit', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                consoleEl.innerText = JSON.stringify(data, null, 2);
-                document.getElementById('m-tasks').innerText = parseInt(document.getElementById('m-tasks').innerText) + 1;
-                document.getElementById('m-audit').innerText = parseInt(document.getElementById('m-audit').innerText) + 1;
-            } catch (err) {
-                consoleEl.innerText = "// Offline / Simulation Output:\n" + JSON.stringify({
-                    dossier_id: "DOSSIER-SIM-" + Math.floor(Math.random()*10000),
-                    system: "quantum-monte-carlo-qmc-engine",
-                    domain: "Clinical & Cryptographic AI",
-                    task_id: payload.task_id,
-                    overall_urgency: payload.is_critical_flag ? "CRITICAL_STAT_PANIC" : "ELEVATED_RISK",
-                    integrity_status: "DISCORDANT_ANOMALY",
-                    alerts: [
-                        { worker: "InvariantQCWorker", alert: "Primary metric exceeds upper reference bound" },
-                        { worker: "SafetyEscalationWorker", alert: "Critical emergency interlock flag active" }
-                    ],
-                    audit_hash: "HMAC_SHA256_e83f9a72b941d6c381f9"
-                }, null, 2);
-            }
-        }
-    </script>
+        <svg class="chart" id="energy-chart" viewBox="0 0 700 240" role="img" aria-label="Estimated energy across consecutive sample blocks with analytic and ground-state reference lines"></svg>
+        <div class="legend"><span><i style="background:#4bd4b2"></i>Block energy</span><span><i style="background:#f4b76b"></i>Analytic trial energy</span><span><i style="background:#8a98af"></i>Exact ground energy</span></div>
+      </div>
+      <p class="small" id="empty-hint">Run the sampler to display energy statistics and a block-mean trace.</p>
+      <div class="actions"><button type="button" class="secondary" id="download" disabled>Export results as JSON</button></div>
+    </section>
+  </div>
+  <details class="card">
+    <summary>Legacy threshold audit demonstration</summary>
+    <p class="small">Retains the original three-threshold classification behavior as an explicitly <strong>unsigned, client-side illustration</strong>. For HMAC-signed server dossiers use the Python API or CLI. These rules are not physical QMC calculations.</p>
+    <form id="audit-form">
+      <div class="fields">
+        <div><label for="audit-primary">Primary metric</label><input id="audit-primary" type="number" step="any" value="29.4" required></div>
+        <div><label for="audit-secondary">Secondary metric</label><input id="audit-secondary" type="number" step="any" value="14.8" required></div>
+        <div><label for="audit-descriptor">Status descriptor</label><input id="audit-descriptor" type="text" value="DISCORDANT_ANOMALY" required></div>
+        <div><label for="audit-critical">Critical flag</label><input id="audit-critical" type="checkbox" checked></div>
+      </div>
+      <div class="actions"><button type="submit">Evaluate thresholds locally</button></div>
+    </form>
+    <pre id="audit-output" aria-live="polite">No audit executed.</pre>
+  </details>
+  <footer>This educational sampler implements variational Monte Carlo only; it does not implement diffusion Monte Carlo, fixed-node projection, quantum hardware, financial pricing, or clinical decision support. <a href="https://github.com/abusuraihsakhri/quantum-monte-carlo-qmc-agent">Source repository</a>.</footer>
+</main>
+<script type="module" src="./app.js"></script>
 </body>
 </html>
