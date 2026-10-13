@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Quantum Monte Carlo Qmc Engine API",
-    "description": "Enterprise Distributed Component Platform (Clinical & Cryptographic AI) adhering to CAP / CLSI / NIST Standards.",
+    "title": "Quantum Monte Carlo QMC Agent legacy audit API",
+    "description": "Three threshold and descriptor heuristic checks. This API does not perform physical quantum Monte Carlo.",
     "version": "3.0.0-ENTERPRISE",
     "contact": {
       "name": "Dr. Abu Suraih Sakhri",
@@ -22,10 +22,10 @@
     },
     "/metrics": {
       "get": {
-        "summary": "Prometheus operational metrics",
+        "summary": "JSON counters and status values",
         "responses": {
           "200": {
-            "description": "Prometheus text metrics"
+            "description": "JSON metrics snapshot"
           }
         }
       }
@@ -69,14 +69,14 @@
         },
         "responses": {
           "200": {
-            "description": "Consensus dossier with HMAC signature"
+            "description": "Threshold-classification dossier and in-memory HMAC chain hash"
           }
         }
       }
     },
     "/api/chat": {
       "post": {
-        "summary": "Air-gapped supervisory conversational assistant",
+        "summary": "Deterministic offline mock configuration query",
         "requestBody": {
           "content": {
             "application/json": {
@@ -106,7 +106,7 @@
         "summary": "Retrieve and cryptographically verify HMAC audit trail",
         "responses": {
           "200": {
-            "description": "Cryptographic audit trail"
+            "description": "In-memory audit record hash chain; no access control provided"
           }
         }
       }
